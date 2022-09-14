@@ -1,38 +1,41 @@
-// HTTP MODULES
+const { readFile, writeFile } = require("fs").promises;
+// const util = require("util");
+// const readFilePromise = util.promisify(readFile);
+// const writeFilePromise = util.promisify(writeFile);
 
-const http = require("http");
-const fs = require("fs");
+const path1 = "./content/first.txt";
+const path2 = "./content/second.txt";
 
-const server = http.createServer(function (req, res) {
-  if (req.url === "/") {
-    fs.readFile("./index.html", (err, data) => {
-      if (err) {
-        console.log(err);
-        return;
+const start = async () => {
+  try {
+    const first = await readFile(path1, "utf8");
+    const second = await readFile(path2, "utf8");
+    await writeFile(
+      `./content/mind-grenade.txt`,
+      `THIS IS AWESOME: \n ${first} \n ${second}`,
+      {
+        flag: "a",
       }
-      res.writeHead(200, {
-        "Content-Type": "text/html",
-      });
-      res.end(data);
-    });
-  } else if (req.url === "/about") {
-    fs.writeFile("./about.html", (err, data) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      res.writeHead(200, {
-        "Content-Type": "text/html",
-      });
-      res.end(data);
-    });
-  } else {
-    res.end(`
-    <h1> Ooopps 1</h1>
-    <p> We cant seem to find the page you are looking for...</p>
-    <a href="/"> Back Home</a>
-    `);
+    );
+    console.log(`${first} \n ${second}`);
+  } catch (error) {
+    console.log(error);
   }
-});
+};
 
-server.listen(8080, console.log(`Listening on port 8080`));
+start();
+// getText(path)
+//   .then((result) => console.log(result))
+//   .catch((err) => console.log(err));
+
+//const getText = (path) => {
+//   return new Promise((resolve, reject) => {
+//     readFile(path, "utf8", (err, data) => {
+//       if (err) {
+//         reject();
+//       } else {
+//         resolve(data);
+//       }
+//     });
+//   });
+// };
